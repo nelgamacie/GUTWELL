@@ -1,6 +1,8 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import CalendarPage from "./components/calendar/page"; // Calendar page
+import React from 'react';
+import './App.css';
+import Home from './components/home';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Navbar from './components/Navbar';
 
 function App() {
   return (

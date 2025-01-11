@@ -2,6 +2,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const multer = require('multer');
+
+const port= 4000
+const uri = "mongodb+srv://sdaher3:KyfCS3s2qiCxCEJO@cluster0.1xadv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+
+const app = express();
 // Start the server
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);

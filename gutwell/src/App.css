@@ -1,7 +1,7 @@
 body {
-  font-family: 'Roboto', sans-serif;
-}
 
+  font-family: 'Roboto', sans-serif; 
+}
 
 .home-container {
   text-align: center;
@@ -14,17 +14,14 @@ body {
   justify-content: center;
 }
 
-
 .home-header h1 {
   margin: 0.5em 0;
   font-size: 4em;
 }
 
-
 .home-header p {
   font-size: 1.5em;
 }
-
 
 .home-header button {
   padding: 10px 20px;
@@ -35,7 +32,6 @@ body {
   border-radius: 5px;
   cursor: pointer;
 }
-
 
 .home-header button:hover {
   background-color: #f3f3f3;
@@ -65,6 +61,29 @@ body {
   display: flex;
 }
 
+
+.navbar-logo {
+  font-size: 24px;
+  font-weight: bold;
+  text-decoration: none;
+  color: white;
+  margin-left: 20px;
+}
+
+.navbar-links {
+  display: flex;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: white;
+  margin-left: 20px;
+  font-size: 18px;
+}
+
+.nav-link:hover {
+  font-weight: bold;
+}
 
 .nav-link {
   text-decoration: none;

@@ -1,36 +1,120 @@
-import React, { useState } from 'react';
-import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
-import './tracker.css';
+import React, { useState, useEffect } from "react";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+import "./tracker.css";
+
+const API_URL = "http://localhost:4000/api/calendar-entries";
 
 function Tracker() {
   const [selectedDate, setSelectedDate] = useState(null);
-  const [journalEntry, setJournalEntry] = useState('');
-  const [tags, setTags] = useState([]); // Flare reset for each date
+  const [journalEntry, setJournalEntry] = useState("");
+  const [tags, setTags] = useState([]);
   const [mood, setMood] = useState(3);
-  const [appointments, setAppointments] = useState([]); // Start with no appointments
-  const [newAppointmentDate, setNewAppointmentDate] = useState('');
-  const [newAppointmentDescription, setNewAppointmentDescription] = useState('');
+  const [appointments, setAppointments] = useState([]);
+  const [newAppointmentDate, setNewAppointmentDate] = useState("");
+  const [newAppointmentDescription, setNewAppointmentDescription] = useState("");
+  const [entries, setEntries] = useState([]);
 
-  const addAppointment = () => {
-    if (newAppointmentDate.trim() !== '' && newAppointmentDescription.trim() !== '') {
-      setAppointments([
-        ...appointments,
-        { date: newAppointmentDate, description: newAppointmentDescription },
-      ]);
-      setNewAppointmentDate('');
-      setNewAppointmentDescription('');
+  // Fetch all calendar entries on load
+  const fetchEntries = async () => {
+    try {
+      const response = await fetch(API_URL);
+      const data = await response.json();
+      setEntries(data);
+    } catch (error) {
+      console.error("Error fetching entries:", error);
     }
   };
 
+  useEffect(() => {
+    fetchEntries();
+  }, []);
+
+  // Handle date selection
   const handleDateChange = (date) => {
-    setSelectedDate(new Date(date).toISOString().split('T')[0]);
-    setJournalEntry(''); // Reset journal entry
-    setTags([]); // Reset tags (Flare checkbox)
-    setMood(3); // Reset mood
+    const formattedDate = new Date(date).toISOString().split("T")[0];
+    setSelectedDate(formattedDate);
+
+    // Find the entry for the selected date
+    const existingEntry = entries.find((entry) => entry.date === formattedDate);
+    if (existingEntry) {
+      setJournalEntry(existingEntry.journalEntry || "");
+      setTags(existingEntry.flareFlag ? ["Flare Started"] : []);
+      setMood(existingEntry.mood || 3);
+      setAppointments(existingEntry.appointments || []);
+    } else {
+      // Reset form for a new entry
+      setJournalEntry("");
+      setTags([]);
+      setMood(3);
+      setAppointments([]);
+    }
   };
 
-  const moodFaces = ['😢', '🙁', '😐', '🙂', '😄'];
+  // Save or update an entry
+  const handleSave = async () => {
+    const entry = {
+      date: selectedDate,
+      journalEntry,
+      flareFlag: tags.includes("Flare Started"),
+      mood,
+      appointments,
+    };
+
+    const existingEntry = entries.find((entry) => entry.date === selectedDate);
+
+    try {
+      if (existingEntry) {
+        // Update existing entry
+        const response = await fetch(`${API_URL}/${existingEntry._id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(entry),
+        });
+        const updatedEntry = await response.json();
+        setEntries((prevEntries) =>
+          prevEntries.map((e) => (e._id === updatedEntry._id ? updatedEntry : e))
+        );
+      } else {
+        // Create a new entry
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(entry),
+        });
+        const newEntry = await response.json();
+        setEntries((prevEntries) => [...prevEntries, newEntry]);
+      }
+      alert("Entry saved successfully!");
+    } catch (error) {
+      console.error("Error saving entry:", error);
+    }
+  };
+
+  // Add a new appointment
+  const addAppointment = () => {
+    if (newAppointmentDate.trim() === "" || newAppointmentDescription.trim() === "") {
+      alert("Please fill out both fields to add an appointment.");
+      return;
+    }
+
+    const appointment = { description: newAppointmentDescription, date: newAppointmentDate };
+    setAppointments([...appointments, appointment]);
+    setNewAppointmentDate("");
+    setNewAppointmentDescription("");
+  };
+
+  // Highlight dates with saved entries
+  const tileClassName = ({ date }) => {
+    const formattedDate = new Date(date).toISOString().split("T")[0];
+    if (entries.some((entry) => entry.date === formattedDate)) {
+      return "highlight";
+    }
+    return null;
+  };
+
+  // Mood faces for the tracker
+  const moodFaces = ["😢", "🙁", "😐", "🙂", "😄"];
 
   return (
     <div className="tracker">
@@ -62,25 +146,22 @@ function Tracker() {
               type="date"
               value={newAppointmentDate}
               onChange={(e) => setNewAppointmentDate(e.target.value)}
-              placeholder="Date"
               className="input-date"
             />
             <input
               type="text"
               value={newAppointmentDescription}
               onChange={(e) => setNewAppointmentDescription(e.target.value)}
-              placeholder="Description"
               className="input-text"
             />
-            <button onClick={addAppointment} className="add-appointment-button">Add Appointment</button>
+            <button onClick={addAppointment} className="add-appointment-button">
+              Add Appointment
+            </button>
           </div>
 
           <div className="card calendar">
             <h2>Calendar</h2>
-            <Calendar
-              onChange={handleDateChange}
-              value={new Date()}
-            />
+            <Calendar onChange={handleDateChange} value={new Date()} tileClassName={tileClassName} />
           </div>
         </div>
       ) : (
@@ -90,6 +171,7 @@ function Tracker() {
             <Calendar
               onChange={handleDateChange}
               value={new Date(selectedDate)}
+              tileClassName={tileClassName}
             />
           </div>
 
@@ -115,7 +197,7 @@ function Tracker() {
                 {moodFaces.map((face, index) => (
                   <span
                     key={index}
-                    className={`mood-face ${mood === index + 1 ? 'selected-mood' : ''}`}
+                    className={`mood-face ${mood === index + 1 ? "selected-mood" : ""}`}
                     onClick={() => setMood(index + 1)}
                   >
                     {face}
@@ -129,10 +211,10 @@ function Tracker() {
               <label className="custom-checkbox">
                 <input
                   type="checkbox"
-                  checked={tags.includes('Flare Started')}
+                  checked={tags.includes("Flare Started")}
                   onChange={(e) => {
                     if (e.target.checked) {
-                      setTags(['Flare Started']);
+                      setTags(["Flare Started"]);
                     } else {
                       setTags([]);
                     }
@@ -143,7 +225,9 @@ function Tracker() {
               </label>
             </div>
 
-            <button className="save-button">Save</button>
+            <button className="save-button" onClick={handleSave}>
+              Save
+            </button>
           </div>
         </div>
       )}

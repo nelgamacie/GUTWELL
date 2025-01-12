@@ -1,10 +1,11 @@
 body {
+
   font-family: 'Roboto', sans-serif; 
 }
 
 .home-container {
   text-align: center;
-  background-color: #75b29f; 
+  background-color: #75b29f;
   color: white;
   padding: 20px;
   height: 100vh; /* Full height */
@@ -36,6 +37,7 @@ body {
   background-color: #f3f3f3;
 }
 
+
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -44,6 +46,21 @@ body {
   padding: 10px 20px;
   color: white;
 }
+
+
+.navbar-logo {
+  font-size: 24px;
+  font-weight: bold;
+  text-decoration: none;
+  color: white;
+  margin-left: 20px;
+}
+
+
+.navbar-links {
+  display: flex;
+}
+
 
 .navbar-logo {
   font-size: 24px;
@@ -67,3 +84,18 @@ body {
 .nav-link:hover {
   font-weight: bold;
 }
+
+.nav-link {
+  text-decoration: none;
+  color: white;
+  margin-left: 20px;
+  font-size: 18px;
+}
+
+
+.nav-link:hover {
+  font-weight: bold;
+}
+
+
+

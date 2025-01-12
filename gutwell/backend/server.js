@@ -2,7 +2,20 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const multer = require('multer');
-// Start the server
+const calendarEntrySchema = require('./models/calenderEntrySchema');
+
+const CalendarEntry = mongoose.model('CalendarEntry', calendarEntrySchema);
+
+
+const port = 4000;
+const uri = "mongodb+srv://sdaher3:KyfCS3s2qiCxCEJO@cluster0.1xadv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+
+const app = express();
+
+// Middleware
+app.use(express.json());
+app.use(cors());
+
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
     

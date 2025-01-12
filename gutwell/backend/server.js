@@ -82,6 +82,3 @@ app.delete('/api/calendar-entries/:id', async (req, res) => {
     }
 });
 
-
-  });
-

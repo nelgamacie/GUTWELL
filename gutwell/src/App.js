@@ -1,20 +1,32 @@
 import React from 'react';
 import './App.css';
-import Home from './components/home';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import TreatmentPage from './components/Treatment/page';
+import './components/Treatment/page.css';
+import EducationalPage from './components/Education/Education';
 import Navbar from './components/Navbar';
 import CalendarPage from "./components/calendar/page"; // Calendar page
+import Home from './components/home';
+import Tracker from './components/Tracker/tracker';
+
 
 function App() {
   return (
+  
     <Router>
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/calendar" element={<CalendarPage />} />
-      </Routes>
-    </Router>
-  );
-}
-
-export default App;
+      <Route path="/treatment" element={<TreatmentPage />} />
+      <Route path="/education" element={<EducationalPage />} />
+       <Route path="/tracker" element={<Tracker />} />
+      {/* Define other routes here using the element prop */}
+    </Routes>
+  </Router>
+      );
+     }
+  
+     
+     export default App;
+     

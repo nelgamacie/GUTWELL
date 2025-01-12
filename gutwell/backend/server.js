@@ -2,29 +2,17 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const multer = require('multer');
-const calendarEntrySchema = require('./models/calenderEntrySchema');
-
-const CalendarEntry = mongoose.model('CalendarEntry', calendarEntrySchema);
-
-
-const port = 4000;
-const uri = "mongodb+srv://sdaher3:KyfCS3s2qiCxCEJO@cluster0.1xadv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-
-const app = express();
-
-// Middleware
-app.use(express.json());
-app.use(cors());
-
 // Start the server
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
+    
     // Connect to MongoDB
-    mongoose.connect(uri)
+    mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
         .then(() => console.log('Connected to MongoDB...hellooo'))
         .catch(err => {
             console.error('Could not connect to MongoDB...', err);
         });
+
 });
 
 // Routes
@@ -93,4 +81,7 @@ app.delete('/api/calendar-entries/:id', async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 });
+
+
+  });
 

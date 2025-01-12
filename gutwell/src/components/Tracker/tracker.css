@@ -207,75 +207,43 @@ body {
     color: white;
   }
   
-  .tags-list {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
+  .flare-section {
+    margin-top: 20px;
+    text-align: center;
   }
   
-  .tags-list li {
-    background-color: #4caf50;
-    color: white;
-    padding: 8px 15px;
-    border-radius: 10px;
-    margin: 5px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  
-  .tags-list li:hover {
-    background-color: #45a049;
-  }
-  
-  .tags-list .selected-tag {
-    background-color: #ffa500;
-    color: #fff;
-  }
-  
-  input[type="range"] {
-    width: 100%;
-    margin-top: 10px;
-  }
-  
-  input[type="text"], input[type="date"] {
-    padding: 12px;
-    width: calc(100% - 24px);
-    margin-top: 12px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    transition: border-color 0.3s ease;
-  }
-  
-  input[type="text"]:focus, input[type="date"]:focus {
-    border-color: #4caf50;
-    outline: none;
-  }
-  
-  button {
-    padding: 12px 25px;
-    background-color: #4caf50;
+  .save-button {
+    background-color: #2196f3;
     color: white;
     border: none;
+    padding: 12px 25px;
     border-radius: 8px;
     cursor: pointer;
-    margin-top: 12px;
+    font-size: 16px;
+    margin-top: 20px;
     transition: background-color 0.3s ease, transform 0.2s ease;
   }
   
-  button:hover {
-    background-color: #45a049;
+  .save-button:hover {
+    background-color: #1976d2;
     transform: translateY(-3px);
   }
   
   .back-button {
     background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 20px;
+    align-self: flex-start;
   }
   
   .back-button:hover {
     background-color: #d32f2f;
+    transform: translateY(-3px);
   }
   
   .react-calendar {

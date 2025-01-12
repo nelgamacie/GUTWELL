@@ -6,20 +6,11 @@ import './tracker.css';
 function Tracker() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [journalEntry, setJournalEntry] = useState('');
-  const [tags, setTags] = useState(['Flare Started']);
-  const [newTag, setNewTag] = useState('');
+  const [tags, setTags] = useState([]); // Flare reset for each date
   const [mood, setMood] = useState(3);
   const [appointments, setAppointments] = useState([]); // Start with no appointments
   const [newAppointmentDate, setNewAppointmentDate] = useState('');
   const [newAppointmentDescription, setNewAppointmentDescription] = useState('');
-  const [selectedTag, setSelectedTag] = useState(null);
-
-  const addTag = () => {
-    if (newTag.trim() !== '') {
-      setTags([...tags, newTag]);
-      setNewTag('');
-    }
-  };
 
   const addAppointment = () => {
     if (newAppointmentDate.trim() !== '' && newAppointmentDescription.trim() !== '') {
@@ -30,6 +21,13 @@ function Tracker() {
       setNewAppointmentDate('');
       setNewAppointmentDescription('');
     }
+  };
+
+  const handleDateChange = (date) => {
+    setSelectedDate(new Date(date).toISOString().split('T')[0]);
+    setJournalEntry(''); // Reset journal entry
+    setTags([]); // Reset tags (Flare checkbox)
+    setMood(3); // Reset mood
   };
 
   const moodFaces = ['😢', '🙁', '😐', '🙂', '😄'];
@@ -80,7 +78,7 @@ function Tracker() {
           <div className="card calendar">
             <h2>Calendar</h2>
             <Calendar
-              onChange={(date) => setSelectedDate(new Date(date).toISOString().split('T')[0])}
+              onChange={handleDateChange}
               value={new Date()}
             />
           </div>
@@ -90,12 +88,15 @@ function Tracker() {
           <div className="card calendar-small">
             <h2>Calendar</h2>
             <Calendar
-              onChange={(date) => setSelectedDate(new Date(date).toISOString().split('T')[0])}
+              onChange={handleDateChange}
               value={new Date(selectedDate)}
             />
           </div>
 
           <div className="journal-section">
+            <button className="back-button" onClick={() => setSelectedDate(null)}>
+              ← Back to Main
+            </button>
             <h2>Tracking for {selectedDate}</h2>
 
             <div className="journal-entry">
@@ -124,29 +125,25 @@ function Tracker() {
               <p>Your mood: {moodFaces[mood - 1]}</p>
             </div>
 
-            <label>Tags:</label>
-            <ul className="tags-list">
-              {tags.map((tag, index) => (
-                <li
-                  key={index}
-                  className={tag === selectedTag ? 'selected-tag' : ''}
-                  onClick={() => setSelectedTag(tag)}
-                >
-                  {tag}
-                </li>
-              ))}
-            </ul>
-            <input
-              type="text"
-              placeholder="Add a new tag"
-              value={newTag}
-              onChange={(e) => setNewTag(e.target.value)}
-            />
-            <button onClick={addTag}>Add Tag</button>
+            <div className="flare-section">
+              <label className="custom-checkbox">
+                <input
+                  type="checkbox"
+                  checked={tags.includes('Flare Started')}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setTags(['Flare Started']);
+                    } else {
+                      setTags([]);
+                    }
+                  }}
+                />
+                <span className="checkmark"></span>
+                Flare Started
+              </label>
+            </div>
 
-            <button className="back-button" onClick={() => setSelectedDate(null)}>
-              Back to Main
-            </button>
+            <button className="save-button">Save</button>
           </div>
         </div>
       )}
